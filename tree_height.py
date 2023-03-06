@@ -1,33 +1,121 @@
-# python3
-
+# Nikita Smirnovs 221RDB433
 import sys
 import threading
-import numpy
+import os
+
+path = "./test/"
+
+class Node:
+    def __init__(self, key) -> None:
+        self.key = key
+        self.lst = []
+
+    def __repr__(self) -> str:
+        return f"key: {self.key} , lst: {self.lst}"
 
 
-def compute_height(n, parents):
-    # Write this function
-    max_height = 0
-    # Your code here
-    return max_height
+class Tree:
+    root = Node
+
+    def __init__(self, n):
+        self.n = n
+        self.map = [Node(x) for x in range(n)]
+
+    def build_tree(self,childrens, i = 0):
+        if childrens[i] == -1: 
+            self.root = self.map[i]
+
+        else:
+            self.map[childrens[i]].lst.append(self.map[i])
+        
+        if i < self.n -1:
+            self.build_tree(childrens, i+1)
+
+    def get_height(self):
+        return self.__get_height(self.root)
+
+    def __get_height(self, node):
+        height = 0
+        if not node.lst:
+            return 1
+
+        for child in node.lst:
+            height =  max(height, self.__get_height(child))
+        return height+1
+
+
+def getTestAns(filename):
+    with open(f"{path + filename}.a") as answer:
+        try:
+            ans = int(answer.readline())
+        except Exception as e:
+            raise e
+        return ans
+
+def getTest(filename):
+
+    with open(f"{path + filename}")  as test:
+        n = int(test.readline())
+        nodes = list(map(int, test.readline().split()))
+
+    return n , nodes
+
+
+def verify_ans(a , b):
+    return a == b
+
+
+def computing(n , nodes):
+    tree = Tree(n)
+    tree.build_tree(nodes)
+    return tree.get_height()
 
 
 def main():
-    # implement input form keyboard and from files
-    
-    # let user input file name to use, don't allow file names with letter a
-    # account for github input inprecision
-    
-    # input number of elements
-    # input values in one variable, separate with space, split these values in an array
-    # call the function and output it's result
-    pass
+    command = input()
+    if command == "I":
+        n = int(input("input count: "))
+        nodes = list(map(int, input().split()))
+        print(computing(n,nodes))
 
-# In Python, the default limit on recursion depth is rather low,
-# so raise it here for this problem. Note that to take advantage
-# of bigger stack, we have to launch the computation in a new thread.
-sys.setrecursionlimit(10**7)  # max depth of recursion
-threading.stack_size(2**27)   # new thread will get stack of such size
+
+    if command == "F":
+        filename = input()
+        test = getTest(filename)
+        n = test[0]
+        nodes = test[1]
+        print(computing(n,nodes))
+
+    if command == "A":
+        folder = os.listdir(path)
+        
+        folder = list(filter(lambda x: not x.endswith(".a"), folder))
+        for filename in folder:
+            print(filename, end=" ")
+            try:
+                data = getTest(filename)
+            except Exception as e :
+                print(e)
+                continue
+
+
+
+            n = data[0]
+            nodes = data[1]
+
+            height = computing(n,nodes)
+
+            print(height , end= " ")
+            
+            try:
+                test = getTestAns(filename)
+                print(verify_ans(height,test))
+            except Exception as e :
+                print(e)
+                continue
+
+
+        
+sys.setrecursionlimit(10**7)
+threading.stack_size(2**27)
 threading.Thread(target=main).start()
-main()
-# print(numpy.array([1,2,3]))
