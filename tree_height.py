@@ -44,14 +44,6 @@ class Tree:
         return height+1
 
 
-def getTestAns(filename):
-    with open(f"{path + filename}.a") as answer:
-        try:
-            ans = int(answer.readline())
-        except Exception as e:
-            raise e
-        return ans
-
 def getTest(filename):
 
     with open(f"{path + filename}")  as test:
@@ -60,9 +52,6 @@ def getTest(filename):
 
     return n , nodes
 
-
-def verify_ans(a , b):
-    return a == b
 
 
 def computing(n , nodes):
@@ -85,34 +74,6 @@ def main():
         n = test[0]
         nodes = test[1]
         print(computing(n,nodes))
-
-    if command == "A":
-        folder = os.listdir(path)
-        
-        folder = list(filter(lambda x: not x.endswith(".a"), folder))
-        for filename in folder:
-            print(filename, end=" ")
-            try:
-                data = getTest(filename)
-            except Exception as e :
-                print(e)
-                continue
-
-
-
-            n = data[0]
-            nodes = data[1]
-
-            height = computing(n,nodes)
-
-            print(height , end= " ")
-            
-            try:
-                test = getTestAns(filename)
-                print(verify_ans(height,test))
-            except Exception as e :
-                print(e)
-                continue
 
 
         
