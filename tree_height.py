@@ -1,33 +1,43 @@
-# python3
-
+# Nikita Smirnovs 221RDB433
 import sys
 import threading
-import numpy
 
+def compute_height(n,nodes):
+    class Node:
+        def __init__(self, key):
+            self.key = key
+            self.lst = []
+    map = [Node(x) for x in range(n)]
+    i = 0
+    for i in range(n):
+        if nodes[i] == -1: 
+            root = map[i]
+        else:
+            map[nodes[i]].lst.append(map[i])
 
-def compute_height(n, parents):
-    # Write this function
-    max_height = 0
-    # Your code here
-    return max_height
+    def calc(node):
+        height = 0
+        if not node.lst:
+            return 1
+        for child in node.lst:
+            height =  max(height, calc(child))
+        return height + 1
 
+    return calc(root)
 
 def main():
-    # implement input form keyboard and from files
-    
-    # let user input file name to use, don't allow file names with letter a
-    # account for github input inprecision
-    
-    # input number of elements
-    # input values in one variable, separate with space, split these values in an array
-    # call the function and output it's result
-    pass
+    command = input()
+    if "I" in command:
+        n = int(input("input count: "))
+        nodes = list(map(int, input().split()))
 
-# In Python, the default limit on recursion depth is rather low,
-# so raise it here for this problem. Note that to take advantage
-# of bigger stack, we have to launch the computation in a new thread.
-sys.setrecursionlimit(10**7)  # max depth of recursion
-threading.stack_size(2**27)   # new thread will get stack of such size
+    elif "F" in command:
+        filename = input()
+        with open("test/" + filename, 'r')  as test:
+            n = int(test.readline())
+            nodes = list(map(int, test.readline().split()))
+    print(compute_height(n,nodes))
+
+sys.setrecursionlimit(10**7)
+threading.stack_size(2**27)
 threading.Thread(target=main).start()
-main()
-# print(numpy.array([1,2,3]))
