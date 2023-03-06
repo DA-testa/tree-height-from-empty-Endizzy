@@ -61,13 +61,15 @@ def computing(n , nodes):
 
 def main():
     command = input()
-    if command == "I":
+    if command in "I":
+        print(1)
         n = int(input("input count: "))
         nodes = list(map(int, input().split()))
         print(computing(n,nodes))
 
 
-    if command == "F":
+    elif command in "F":
+        print(2)
         filename = input()
         test = getTest(filename)
         n = test[0]
@@ -80,4 +82,3 @@ def main():
 sys.setrecursionlimit(10**7)
 threading.stack_size(2**27)
 threading.Thread(target=main).start()
-main()
