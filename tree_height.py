@@ -1,106 +1,36 @@
-# Nikita Smirnovs 221RDB433
-import sys
-import threading
+def compute_height(n, parents):
 
-path = "test/"
-
-class Node:
-    def __init__(self, key) -> None:
-        self.key = key
-        self.lst = []
-
-    # def __repr__(self) -> str:
-    #     return f"key: {self.key} , lst: {self.lst}"
-
-
-# class Tree:
-#     root = Node
-
-#     def __init__(self, n):
-#         self.n = n
-#         self.map = [Node(x) for x in range(n)]
-
-#     def build_tree(self,childrens, i = 0):
-#         if childrens[i] == -1: 
-#             self.root = self.map[i]
-
-#         else:
-#             self.map[childrens[i]].lst.append(self.map[i])
-        
-#         if i < self.n -1:
-#             self.build_tree(childrens, i+1)
-
-#     def get_height(self):
-#         return self.__get_height(self.root)
-
-#     def __get_height(self, node):
-#         height = 0
-#         if not node.lst:
-#             return 1
-
-#         for child in node.lst:
-#             height =  max(height, self.__get_height(child))
-#         return height+1
-
-
-
-def getTest(filename):
-
-    with open(f"{path + filename}")  as test:
-        n = int(test.readline())
-        nodes = list(map(int, test.readline().split()))
-
-    return n , nodes
-
-
-# def computing(n , nodes):
-#     tree = Tree(n)
-#     tree.build_tree(nodes)
-#     return tree.get_height()
-
-
-def built(n,nodes):
-    map = [Node(x) for x in range(n)]
-    i = 0
+    child1 = [[] for _ in range(n)]
     for i in range(n):
-        if nodes[i] == -1: 
-            root = map[i]
-
+        parent = parents[i]
+        if parent == -1:
+            root = i
         else:
-            map[nodes[i]].lst.append(map[i])
-        
-    def calc(node):
-        height = 0
-        if not node.lst:
+            child1[parent].append(i)
+
+    def compute_depth(node):
+        if not child1[node]:
             return 1
+        max_depth = 0
+        for child2 in child1[node]:
+            depth = compute_depth(child2)
+            max_depth = max(max_depth, depth)
+        return max_depth + 1
 
-        for child in node.lst:
-            height =  max(height, calc(child))
-        return height + 1
-
-    return calc(root)
-
-
-
+    return compute_depth(root)
 
 def main():
-    command = input()
-    if command == "I":
-        n = int(input("input count: "))
-        nodes = list(map(int, input().split()))
-        #print(computing(n,nodes))
+    input_type = input("")
+    if 'I' in input_type:
+        temp = int(input())
+        temp2 = list(map(int, input().split()))
+        height = compute_height(temp, temp2)
+        print(height)
 
-    elif command == "F":
+    elif 'F' in input_type:
         filename = input()
-        test = getTest(filename)
-        n = test[0]
-        nodes = test[1]
-        #print(computing(n,nodes))
-    print(built(n,nodes))
-
-
-
-        
-sys.setrecursionlimit(10**7)
-threading.stack_size(2**27)
-threading.Thread(target=main).start()
+        with open("test/" + filename, 'r') as file:
+            temp = int(file.readline())
+            temp2 = list(map(int, file.readline().split()))
+            height = compute_height(temp, temp2)
+            print(height)
