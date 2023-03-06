@@ -1,44 +1,43 @@
+# Nikita Smirnovs 221RDB433
 import sys
 import threading
 
-def compute_height(n, parents):
-
-    child1 = [[] for _ in range(n)]
+def compute_height(n,nodes):
+    class Node:
+        def __init__(self, key):
+            self.key = key
+            self.lst = []
+    map = [Node(x) for x in range(n)]
+    i = 0
     for i in range(n):
-        parent = parents[i]
-        if parent == -1:
-            root = i
+        if nodes[i] == -1: 
+            root = map[i]
         else:
-            child1[parent].append(i)
+            map[nodes[i]].lst.append(map[i])
 
-    def compute_depth(node):
-        if not child1[node]:
+    def calc(node):
+        height = 0
+        if not node.lst:
             return 1
-        max_depth = 0
-        for child2 in child1[node]:
-            depth = compute_depth(child2)
-            max_depth = max(max_depth, depth)
-        return max_depth + 1
+        for child in node.lst:
+            height =  max(height, calc(child))
+        return height + 1
 
-    return compute_depth(root)
+    return calc(root)
 
 def main():
-    input_type = input("")
-    if 'I' in input_type:
-        temp = int(input())
-        temp2 = list(map(int, input().split()))
-        height = compute_height(temp, temp2)
-        print(height)
+    command = input()
+    if "I" in command:
+        n = int(input("input count: "))
+        nodes = list(map(int, input().split()))
 
-    elif 'F' in input_type:
+    elif "F" in command:
         filename = input()
-        with open("test/" + filename, 'r') as file:
-            temp = int(file.readline())
-            temp2 = list(map(int, file.readline().split()))
-            height = compute_height(temp, temp2)
-            print(height)
+        with open("test/" + filename, 'r')  as test:
+            n = int(test.readline())
+            nodes = list(map(int, test.readline().split()))
+    print(compute_height(n,nodes))
 
-
-sys.setrecursionlimit(10**7)  
-threading.stack_size(2**27)   
+sys.setrecursionlimit(10**7)
+threading.stack_size(2**27)
 threading.Thread(target=main).start()
