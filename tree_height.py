@@ -1,3 +1,6 @@
+import sys
+import threading
+
 def compute_height(n, parents):
 
     child1 = [[] for _ in range(n)]
@@ -34,3 +37,8 @@ def main():
             temp2 = list(map(int, file.readline().split()))
             height = compute_height(temp, temp2)
             print(height)
+
+
+sys.setrecursionlimit(10**7)  
+threading.stack_size(2**27)   
+threading.Thread(target=main).start()
