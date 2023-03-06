@@ -59,22 +59,45 @@ def computing(n , nodes):
     return tree.get_height()
 
 
+def built(n,nodes):
+    map = [Node(x) for x in range(n)]
+    i = 0
+    for i in range(n):
+        if nodes[i] == -1: 
+            root = map[i]
+
+        else:
+            map[nodes[i]].lst.append(map[i])
+        
+    def calc(node):
+        height = 0
+        if not node.lst:
+            return 1
+
+        for child in node.lst:
+            height =  max(height, calc(child))
+        return height + 1
+
+    return calc(root)
+
+
+
+
 def main():
     command = input()
-    if command in "I":
-        print(1)
+    if command == "I":
         n = int(input("input count: "))
         nodes = list(map(int, input().split()))
-        print(computing(n,nodes))
+        #print(computing(n,nodes))
+        print(built(n,nodes))
 
-
-    elif command in "F":
-        print(2)
+    elif command == "F":
         filename = input()
         test = getTest(filename)
         n = test[0]
         nodes = test[1]
-        print(computing(n,nodes))
+        #print(computing(n,nodes))
+        print(built(n,nodes))
 
 
 
